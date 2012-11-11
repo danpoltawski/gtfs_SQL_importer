@@ -184,7 +184,7 @@ if __name__ == "__main__":
       "calendar_dates" ,
       "fare_attributes" ,
       "fare_rules" ,
-      "shapes" ,
+      #"shapes" ,
       "trips" ,
       "stop_times" ,
       "frequencies" ,
