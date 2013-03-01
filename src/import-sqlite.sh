@@ -2,6 +2,7 @@
 set -e
 
 timestamp=`date +%Y%m%d%H%M`
+timestampfilename=`date +%Y-%m-%d-%H%M`
 filename=transit-${timestamp}.db
 
 [ -f google_transit.zip ] && rm  google_transit.zip
@@ -18,7 +19,7 @@ echo "INSERT INTO shouldirun_config VALUES ('version', '$timestamp');" | sqlite3
 echo 'VACUUM;' | sqlite3 $filename
 sha512=(`shasum -a 512 $filename`)
 gzip $filename
-cat << EOF > $timestamp.json
+cat << EOF > $timestampfilename.json
 {
     "version": "$timestamp",
     "url": "",
@@ -26,3 +27,6 @@ cat << EOF > $timestamp.json
     "description": "Timetable update from Transperth. Updated `date`."
 }
 EOF
+echo "Now Run:"
+echo "s3cmd put --acl-public {$filename}.gz s3://shouldirun"
+echo "s3cmd info s3://shouldirun/{$filename}.gz"
