@@ -22,11 +22,11 @@ gzip $filename
 cat << EOF > $timestampfilename.json
 {
     "version": "$timestamp",
-    "url": "",
+    "url": "https://d36ldssoaigick.cloudfront.net/${filename}.gz",
     "sha512": "$sha512",
     "description": "Timetable update from Transperth. Updated `date`."
 }
 EOF
 echo "Now Run:"
-echo "s3cmd put --acl-public {$filename}.gz s3://shouldirun"
-echo "s3cmd info s3://shouldirun/{$filename}.gz"
+echo "s3cmd put --acl-public ${filename}.gz s3://shouldirun"
+echo "s3cmd info s3://shouldirun/${filename}.gz"

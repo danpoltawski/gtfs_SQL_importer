@@ -32,4 +32,4 @@ AND gtfs_stop_times.stop_id = danp_computed_last_stops.stop_id);
 DROP table danp_computed_last_stops;
 
 -- Fix 'broken data' to work with earlier versions of app.
-UPDATE gtfs_routes set route_short_name = substr(route_long_name, 0, 4) WHERE route_short_name is null;
+UPDATE gtfs_routes set route_short_name = upper(substr(route_long_name, 0, 4)) WHERE route_short_name is null;
