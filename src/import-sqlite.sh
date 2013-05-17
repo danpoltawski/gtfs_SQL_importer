@@ -22,7 +22,7 @@ gzip $filename
 cat << EOF > $timestampfilename.json
 {
     "version": "$timestamp",
-    "url": "https://d36ldssoaigick.cloudfront.net/${filename}.gz",
+    "url": "http://updates.shouldirun.com/${filename}.gz",
     "sha512": "$sha512",
     "description": "Timetable update from Transperth. Updated `date`."
 }
