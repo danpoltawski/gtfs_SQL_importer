@@ -28,5 +28,5 @@ cat << EOF > $timestampfilename.json
 }
 EOF
 echo "Now Run:"
-echo "s3cmd put --acl-public ${filename}.gz s3://shouldirun"
-echo "s3cmd info s3://shouldirun/${filename}.gz"
+echo "scp $timestampfilename.json shouldirun:"
+#echo "s3cmd put --acl-public ${filename}.gz s3V://shouldirun"
