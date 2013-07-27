@@ -4,6 +4,7 @@ set -e
 timestamp=`date +%Y%m%d%H%M`
 timestampfilename=`date +%Y-%m-%d-%H%M`
 filename=transit-${timestamp}.db
+shrunkfilename=shrunk-$filename
 
 #[ -f google_transit.zip ] && rm  google_transit.zip
 #[ -d feed ] && rm -r feed
@@ -17,6 +18,9 @@ cat post-import.sql | sqlite3 $filename
 echo 'CREATE TABLE shouldirun_config (name, value);' | sqlite3 $filename
 echo "INSERT INTO shouldirun_config VALUES ('version', '$timestamp');" | sqlite3 $filename
 echo 'VACUUM;' | sqlite3 $filename
+cp $filename $shrunkfilename
+cat post-import-optimise.sql | sqlite3 $shrunkfilename
+echo 'VACUUM;' | sqlite3 $shrunkfilename
 sha512=(`shasum -a 512 $filename`)
 gzip $filename
 cat << EOF > $timestampfilename.json
