@@ -22,15 +22,22 @@ cp $filename $shrunkfilename
 cat post-import-optimise.sql | sqlite3 $shrunkfilename
 echo 'VACUUM;' | sqlite3 $shrunkfilename
 sha512=(`shasum -a 512 $filename`)
+shrunksha512=(`shasum -a 512 $shrunkfilename`)
 gzip $filename
+gzip $shrunkfilename
 cat << EOF > $timestampfilename.json
 {
     "version": "$timestamp",
     "url": "http://updates.shouldirun.com/${filename}.gz",
     "sha512": "$sha512",
+    "shrunk-url": "http://shouldirun.com/update-files/${shrunkfilename}.gz",
+    "shrunk-sha512": "$shrunksha512",
     "description": "Timetable update from Transperth. Updated `date`."
 }
 EOF
 echo "Now Run:"
-echo "scp $timestampfilename.json shouldirun:"
-#echo "s3cmd put --acl-public ${filename}.gz s3V://shouldirun"
+scp $timestampfilename.json shouldirun:
+echo "scp $shrunkfilename.gz shouldirun:/srv/shouldirun.com/update-files/"
+scp $shrunkfilename.gz shouldirun:/srv/shouldirun.com/update-files/
+echo "$HOME/bin/upcs -c shouldirun $filename.gz"
+$HOME/bin/upcs -c shouldirun $filename.gz
