@@ -25,7 +25,7 @@ INSERT INTO danp_computed_last_stops SELECT stop_id, trip_id, MAX(stop_sequence)
 ALTER TABLE gtfs_stop_times ADD COLUMN danp_last_stop bool;
 
 UPDATE gtfs_stop_times SET danp_last_stop = 1
-WHERE (SELECT stop_id FROM danp_computed_last_stops
+WHERE stop_sequence != 1 AND stop_id IN (SELECT stop_id FROM danp_computed_last_stops
 WHERE gtfs_stop_times.trip_id = danp_computed_last_stops.trip_id
 AND gtfs_stop_times.stop_id = danp_computed_last_stops.stop_id);
 
