@@ -8,7 +8,7 @@ shrunkfilename=shrunk-$filename
 
 [ -f google_transit.zip ] && rm  google_transit.zip
 [ -d feed ] && rm -r feed
-curl -O http://www.transperth.wa.gov.au/TimetablePDFs/GoogleTransit/google_transit.zip
+curl -O  http://www.transperth.wa.gov.au/TimetablePDFs/GoogleTransit/Production/google_transit.zip
 mkdir feed
 cd feed
 unzip ../google_transit.zip
