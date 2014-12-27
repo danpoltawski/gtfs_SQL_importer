@@ -32,8 +32,9 @@ gzip $shrunkfilename
 read -p "Do you want to upload? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
+then
         # do dangerous stuff
-    cat << EOF > $timestampfilename.json
+cat << EOF > $timestampfilename.json
     {
         "version": "$timestamp",
         "url": "http://updates.shouldirun.com/${filename}.gz",
@@ -42,7 +43,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]
         "shrunk-sha512": "$shrunksha512",
         "description": "Timetable update from Transperth. Updated `date`."
     }
-    EOF
+EOF
     echo "Now Run:"
     scp $timestampfilename.json shouldirun:
     echo "scp $shrunkfilename.gz shouldirun:/srv/shouldirun.com/update-files/"
