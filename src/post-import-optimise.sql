@@ -7,9 +7,10 @@ create table danp_stop_times (
   danp_last_stop bool
 );
 
-create index dan_dep_time_index on danp_stop_times(departure_time_seconds);
-create index dan_stop_id_index  on danp_stop_times(stop_rowid);
-create index dan_trip_id_index  on danp_stop_times(trip_rowid);
+--create index dan_dep_time_index on danp_stop_times(departure_time_seconds);
+--create index dan_stop_id_index  on danp_stop_times(stop_rowid);
+--create index dan_trip_id_index  on danp_stop_times(trip_rowid);
+create index dan_stoptime_index  on danp_stop_times(stop_rowid, trip_rowid);
 
 INSERT INTO danp_stop_times SELECT t.ROWID, s.ROWID, st.stop_sequence, st.stop_headsign, st.departure_time_seconds, st.danp_last_stop
 FROM gtfs_stop_times st
