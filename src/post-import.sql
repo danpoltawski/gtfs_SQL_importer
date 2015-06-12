@@ -20,6 +20,8 @@ create temporary table danp_computed_last_stops (
   trip_id text,
   max_sequence int
 );
+CREATE INDEX temp_computed ON danp_computed_last_stops (stop_id, trip_id);
+
 INSERT INTO danp_computed_last_stops SELECT stop_id, trip_id, MAX(stop_sequence) FROM gtfs_stop_times GROUP BY trip_id;
 
 ALTER TABLE gtfs_stop_times ADD COLUMN danp_last_stop bool;
