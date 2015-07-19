@@ -39,7 +39,7 @@ cat << EOF > $timestampfilename.json
         "version": "$timestamp",
         "url": "http://updates.shouldirun.com/${filename}.gz",
         "sha512": "$sha512",
-        "shrunk-url": "http://shouldirun.com/update-files/${shrunkfilename}.gz",
+        "shrunk-url": "https://shouldirun.com/update-files/${shrunkfilename}.gz",
         "shrunk-sha512": "$shrunksha512",
         "description": "Timetable update from Transperth. Updated `date`."
     }
