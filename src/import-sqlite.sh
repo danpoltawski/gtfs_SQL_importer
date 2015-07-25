@@ -3,8 +3,7 @@ set -e
 
 timestamp=`date +%Y%m%d%H%M`
 timestampfilename=`date +%Y-%m-%d-%H%M`
-filename=transit-${timestamp}.db
-shrunkfilename=shrunk-$filename
+filename=perth-${timestamp}.db
 
 [ -f google_transit.zip ] && rm  google_transit.zip
 [ -d feed ] && rm -r feed
@@ -21,33 +20,28 @@ echo 'CREATE TABLE shouldirun_config (name, value);' | sqlite3 $filename
 echo "INSERT INTO shouldirun_config VALUES ('version', '$timestamp');" | sqlite3 $filename
 echo "running vaccum";
 echo 'VACUUM;' | sqlite3 $filename
-cp $filename $shrunkfilename
 echo "running shrunk optimise";
-cat post-import-optimise.sql | sqlite3 $shrunkfilename
-echo 'VACUUM;' | sqlite3 $shrunkfilename
-sha512=(`shasum -a 512 $filename`)
-shrunksha512=(`shasum -a 512 $shrunkfilename`)
-gzip $filename
-gzip $shrunkfilename
+cat post-import-optimise.sql | sqlite3 $filename
+echo 'VACUUM;' | sqlite3 $filename
+filesize=$(wc -c < $filename)
+bzip2 $filename
+bzipfilesize=$(wc -c < $filename.bz2)
+totalfilesize=$(($bzipfilesize + $filesize))
+cat << EOF > $timestampfilename.json
+    {
+        "version": "$timestamp",
+        "bzip2-url": "https://shouldirun.com/update-files/${filename}.bz2",
+        "filesize": $totalfilesize,
+        "description": "Timetable update from Transperth. Updated `date`."
+    }
+EOF
 read -p "Do you want to upload? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
         # do dangerous stuff
-cat << EOF > $timestampfilename.json
-    {
-        "version": "$timestamp",
-        "url": "http://updates.shouldirun.com/${filename}.gz",
-        "sha512": "$sha512",
-        "shrunk-url": "https://shouldirun.com/update-files/${shrunkfilename}.gz",
-        "shrunk-sha512": "$shrunksha512",
-        "description": "Timetable update from Transperth. Updated `date`."
-    }
-EOF
     echo "Now Run:"
     scp $timestampfilename.json shouldirun:
-    echo "scp $shrunkfilename.gz shouldirun:/srv/shouldirun.com/update-files/"
-    scp $shrunkfilename.gz shouldirun:/srv/shouldirun.com/update-files/
-    echo "$HOME/bin/upcs -c shouldirun $filename.gz"
-    $HOME/bin/upcs -c shouldirun $filename.gz
+    echo "scp $shrunkfilename.bz2 shouldirun:/srv/shouldirun.com/update-files/"
+    scp $shrunkfilename.bz2 shouldirun:/srv/shouldirun.com/update-files/
 fi
