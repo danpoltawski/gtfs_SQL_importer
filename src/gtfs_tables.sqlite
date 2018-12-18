@@ -70,6 +70,7 @@ create table gtfs_stops (
   stop_region text,
   stop_postcode text,
   stop_country text,
+  supported_modes text,
 
   -- unofficial features
 
@@ -244,6 +245,9 @@ create table gtfs_stop_times (
   ,
   arrival_time_seconds int, 
   departure_time_seconds int,
+  fare text,
+  zone text,
+  section text,
 
   FOREIGN KEY (trip_id) REFERENCES gtfs_trips(trip_id),
   FOREIGN KEY (stop_id) REFERENCES gtfs_stops(stop_id),
