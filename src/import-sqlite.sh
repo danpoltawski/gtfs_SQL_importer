@@ -13,7 +13,7 @@ cd feed
 unzip ../google_transit.zip
 cd ..
 echo "importing data";
-cat gtfs_tables.sqlite <(python import_gtfs_to_sql.py feed nocopy) | sqlite3 $filename
+cat gtfs_tables.sqlite <(/usr/bin/python import_gtfs_to_sql.py feed nocopy) | sqlite3 $filename
 echo "running post-import";
 cat post-import.sql | sqlite3 $filename
 echo 'CREATE TABLE shouldirun_config (name, value);' | sqlite3 $filename
